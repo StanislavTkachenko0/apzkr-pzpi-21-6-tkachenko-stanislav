@@ -1,0 +1,13 @@
+<div style="width: 100%">
+
+  <div style="margin-top: 10px">
+    <p-tabMenu [scrollable]="true"
+               [model]="tabItems"
+               (activeItemChange)="onActiveItemChange($event)"
+               [(activeItem)]="activeItem"></p-tabMenu>
+  </div>
+
+  <div style="width: 100%">
+    <router-outlet></router-outlet>
+  </div>
+</div>

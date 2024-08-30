@@ -1,0 +1,134 @@
+<div class="flex flex-direction-column" style="width: 100%; padding: 10px 0">
+    <div class="flex justify-content-between" style="width: 100%">
+        <div></div>
+
+        <button
+            pButton
+            [label]="'CREATE_STARTUP' | translate"
+            (click)="onShowCreateDialog()"
+            icon="pi pi-plus"
+            class="p-button p-button-outlined p-button-plain"
+        ></button>
+    </div>
+
+    <startups-data-view
+        [canModify]="true"
+        [user]="workspaceParent.user"
+        [startups]="myStartups"
+        (onEditStartup)="onShowCreateDialog($event)"
+    ></startups-data-view>
+</div>
+
+<p-dialog [header]="!!currentStartup ? ('EDIT_STARTUP' | translate) : ('CREATE_STARTUP' | translate)"
+          [(visible)]="visibleDialog"
+          [modal]="true"
+          [style]="{ width: '50vw' }"
+          [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <div style="font-weight: bold; margin-bottom: 10px">
+        {{'CREATE_STARTUP_TIP' | translate}}
+    </div>
+
+    <form class="flex flex-direction-column" style="gap: 15px" [formGroup]="form">
+        <div class="flex-column gap-2">
+            <label for="name">{{ 'FORM_NAME' | translate }}</label>
+            <input
+                pInputText
+                formControlName="name"
+                style="width: 100%"
+                id="name"
+                type="text" />
+            <div style="height: 10px">
+                <ng-container *ngIf="(form.get('name')?.touched || form.get('name')?.dirty)
+                            && form.get('name')?.invalid">
+                    <small *ngIf="form.get('name')?.errors?.['required']" class="p-error">
+                        {{localizationService.getLanguage() === 'en' ? 'Required field' : 'Обовя`зкове поле'}}</small>
+                </ng-container>
+            </div>
+        </div>
+
+        <div>
+            <p-editor formControlName="description" [style]="{ height: '250px' }"></p-editor>
+        </div>
+
+        <div>
+            <p-dropdown
+                formControlName="developmentStage"
+                [options]="developmentStages"
+                [style]="{ width: '100%' }"
+                optionLabel="name"
+                appendTo="body"
+                [placeholder]="localizationService.getLanguage() === 'en'
+                        ? 'Select a stage' : 'Оберіть стадію'"></p-dropdown>
+        </div>
+
+        <div>
+            <p-dropdown
+                formControlName="desiredInvestorType"
+                [options]="desiredInvestorTypes"
+                [style]="{ width: '100%' }"
+                optionLabel="name"
+                appendTo="body"
+                [placeholder]="localizationService.getLanguage() === 'en'
+                        ? 'Select an investor type' : 'Оберіть тип інвестора'"></p-dropdown>
+        </div>
+
+        <div class="flex-column gap-2">
+            <label for="documentPath">{{ 'DOCUMENTATION_PATH' | translate }}</label>
+            <input
+                pInputText
+                formControlName="documentPath"
+                style="width: 100%"
+                id="documentPath"
+                type="text" />
+        </div>
+
+        <div class="flex-column gap-2">
+            <label for="requiredBudget">{{ 'REQUIRED_BUDGET' | translate }}</label>
+            <input
+                pInputText
+                formControlName="requiredBudget"
+                style="width: 100%"
+                id="requiredBudget"
+                type="number" />
+            <div style="height: 10px">
+                <ng-container *ngIf="(form.get('requiredBudget')?.touched || form.get('requiredBudget')?.dirty)
+                            && form.get('requiredBudget')?.invalid">
+                    <small *ngIf="form.get('requiredBudget')?.errors?.['required']" class="p-error">
+                        {{localizationService.getLanguage() === 'en' ? 'Required field' : 'Обовя`зкове поле'}}</small>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="flex-column gap-2">
+            <label for="deadline">{{ 'DEADLINE' | translate }}</label>
+            <input
+                pInputText
+                formControlName="deadline"
+                style="width: 100%"
+                id="deadline"
+                [placeholder]="localizationService.getLanguage() === 'en'
+                        ? 'Enter deadline in month' : 'Введіть срок у місяцях'"
+                type="number" />
+            <div style="height: 10px">
+                <ng-container *ngIf="(form.get('deadline')?.touched || form.get('deadline')?.dirty)
+                            && form.get('deadline')?.invalid">
+                    <small *ngIf="form.get('deadline')?.errors?.['required']" class="p-error">
+                        {{localizationService.getLanguage() === 'en' ? 'Required field' : 'Обовя`зкове поле'}}</small>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button
+            pButton
+            [label]="!!currentStartup ? ('EDIT_STARTUP' | translate) : ('CREATE_STARTUP' | translate)"
+            icon="pi pi-check"
+            iconPos="left"
+            class="p-button p-button-plain p-button-text"
+            [disabled]="form.invalid"
+            [loading]="isLoading"
+            (click)="!!currentStartup ? onEditStartup() : onCreateStartup()"
+        ></button>
+    </ng-template>
+</p-dialog>

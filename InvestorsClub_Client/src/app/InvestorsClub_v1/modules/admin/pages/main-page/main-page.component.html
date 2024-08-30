@@ -1,0 +1,10 @@
+<div class="main-admin-page" style="max-width: 1070px; width: 100%; height: 100%">
+  <p-tabMenu [scrollable]="true"
+             [model]="tabItems"
+             (activeItemChange)="onActiveItemChange($event)"
+             [(activeItem)]="activeItem"></p-tabMenu>
+
+  <div style="width: 100%">
+    <router-outlet></router-outlet>
+  </div>
+</div>

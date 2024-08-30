@@ -1,0 +1,24 @@
+<div class="main-page" style="width: 100%">
+  <div #toolbar>
+    <toolbar></toolbar>
+  </div>
+
+  <ng-container *ngIf="!localizationService.onChangeLangProcess else loadingTemplate">
+    <div style="width: 100%">
+      <p-scrollPanel styleClass="scrollpanel-investor" [style]="{width: '100%', height: 'calc(100vh - ' + (toolbar.offsetHeight) + 'px)'}">
+        <router-outlet></router-outlet>
+      </p-scrollPanel>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="flex justify-content-center align-items-center"
+       [style.height]="'calc(100vh - ' + (toolbar.offsetHeight + 15) + 'px)'">
+    <p-progressSpinner [style]="{width: '50px', height: '50px'}"
+    ></p-progressSpinner>
+  </div>
+</ng-template>
+
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

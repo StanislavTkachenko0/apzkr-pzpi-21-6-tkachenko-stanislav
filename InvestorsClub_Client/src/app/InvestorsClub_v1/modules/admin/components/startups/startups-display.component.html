@@ -1,0 +1,15 @@
+<div class="startups-display">
+  <ng-container *ngIf="user && startups.length > 0 else noData">
+      <startups-data-view
+          [startups]="startups"
+          [user]="user"
+          [canModify]="true"
+      ></startups-data-view>
+  </ng-container>
+</div>
+
+<ng-template #noData>
+    <div class="flex justify-content-center">
+        <span style="font-weight: bold">no data</span>
+    </div>
+</ng-template>

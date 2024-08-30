@@ -1,0 +1,111 @@
+<div class="sign-up flex justify-content-center align-items-center" style="width: 100%; height: 100%">
+  <p-card [header]="'SIGN_UP' | translate"
+          style="max-width: 50vw; width: 100%"
+          styleClass="sign-card"
+          [style]="{maxWidth: '50vw', width: '100%'}">
+    <form [formGroup]="form" (ngSubmit)="register()">
+      <div class="flex flex-direction-column" style="gap: 15px">
+        <div class="flex-column gap-2">
+          <label for="email">Email</label>
+          <input
+            pInputText
+            formControlName="email"
+            style="width: 100%"
+            id="email" />
+          <div style="height: 10px">
+            <ng-container *ngIf="(form.get('email')?.touched || form.get('email')?.dirty)
+                            && form.get('email')?.invalid">
+              <small *ngIf="form.get('email')?.errors?.['required']" class="p-error">Email is required</small>
+              <small *ngIf="form.get('email')?.errors?.['email']" class="p-error">Email doesn't correct</small>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex-column gap-2">
+          <label for="password">Password</label>
+          <input
+            pInputText
+            formControlName="password"
+            style="width: 100%"
+            id="password"
+            type="password" />
+          <div style="height: 10px">
+            <ng-container *ngIf="(form.get('password')?.touched || form.get('password')?.dirty)
+                            && form.get('password')?.invalid">
+              <small *ngIf="form.get('password')?.errors?.['required']" class="p-error">Password is required</small>
+              <small *ngIf="form.get('password')?.errors?.['minlength']" class="p-error">Password must be more then 6 symbols</small>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex-column gap-2">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            pInputText
+            formControlName="confirmPassword"
+            style="width: 100%"
+            id="confirmPassword"
+            type="password" />
+          <div style="height: 10px">
+            <ng-container *ngIf="(form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty)
+                            && form.get('confirmPassword')?.invalid">
+              <small class="p-error"
+                     *ngIf="form.get('confirmPassword')!.hasError('passwordMismatch') && !form.get('password')?.invalid">
+                Passwords do not match.
+              </small>
+            </ng-container>
+          </div>
+        </div>
+
+          <div>
+              <p-dropdown
+                  formControlName="role"
+                  [options]="roles"
+                  [style]="{ width: '100%' }"
+                  optionLabel="name"
+                  appendTo="body"
+                  [placeholder]="localizationService.getLanguage() === 'en'
+                        ? 'Select an user type' : 'Оберіть тип користувача'"></p-dropdown>
+              <div style="height: 10px">
+                  <ng-container *ngIf="(form.get('role')?.touched || form.get('role')?.dirty)
+                            && form.get('role')?.invalid">
+                      <small *ngIf="form.get('role')?.errors?.['required']" class="p-error">Field is required</small>
+                  </ng-container>
+              </div>
+          </div>
+
+          <div *ngIf="form.get('role')?.value?.code! === Roles.Investor">
+              <p-dropdown
+                  formControlName="investorType"
+                  [options]="desiredInvestorTypes"
+                  [style]="{ width: '100%' }"
+                  optionLabel="name"
+                  appendTo="body"
+                  [placeholder]="localizationService.getLanguage() === 'en'
+                        ? 'Select an investor type' : 'Оберіть тип інвестора'"></p-dropdown>
+          </div>
+
+          <ng-container *ngIf="form.get('role')?.value?.code! === Roles.Investor">
+              <div class="flex-column gap-2">
+                  <label for="budget">Budget</label>
+                  <input
+                      pInputText
+                      formControlName="budget"
+                      style="width: 100%"
+                      id="budget"
+                      type="number" />
+              </div>
+          </ng-container>
+
+        <button
+          pButton
+          type="submit"
+          [disabled]="form.invalid"
+          [loading]="isLoading"
+          [label]="'SIGN_UP' | translate"
+          class="p-button p-button-plain p-button-outlined"
+        ></button>
+      </div>
+    </form>
+  </p-card>
+</div>

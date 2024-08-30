@@ -1,0 +1,58 @@
+<div class="sign-in flex justify-content-center align-items-center" style="width: 100%; height: 100%">
+  <p-card [header]="'SIGN_IN' | translate"
+          style="max-width: 50vw; width: 100%"
+          styleClass="sign-card"
+          [style]="{maxWidth: '50vw', width: '100%'}">
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <div class="flex flex-direction-column" style="gap: 25px">
+        <div class="flex-column gap-2">
+          <label for="email">Email</label>
+          <input
+            pInputText
+            formControlName="email"
+            style="width: 100%"
+            id="email" />
+          <div style="height: 10px">
+            <ng-container *ngIf="(form.get('email')?.touched || form.get('email')?.dirty)
+                            && form.get('email')?.invalid">
+              <small *ngIf="form.get('email')?.errors?.['required']" class="p-error">Email is required</small>
+              <small *ngIf="form.get('email')?.errors?.['email']" class="p-error">Email doesn't correct</small>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex-column gap-2">
+          <label for="password">Password</label>
+          <input
+            pInputText
+            formControlName="password"
+            style="width: 100%"
+            id="password"
+            type="password" />
+          <div style="height: 10px">
+            <ng-container *ngIf="(form.get('password')?.touched || form.get('password')?.dirty)
+                            && form.get('password')?.invalid">
+              <small *ngIf="form.get('password')?.errors?.['required']" class="p-error">Password is required</small>
+              <small *ngIf="form.get('password')?.errors?.['minlength']" class="p-error">Password must be more then 6 symbols</small>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex flex-direction-column" style="gap: 10px">
+          <button
+            pButton
+            type="submit"
+            [disabled]="form.invalid"
+            [loading]="isLoading"
+            [label]="'SIGN_IN' | translate"
+            class="p-button p-button-plain p-button-outlined"
+          ></button>
+
+          <div class="flex justify-content-center">
+            Don't have an account yet?&nbsp; <a style="color: grey" [routerLink]="'../up'">Sign up</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </p-card>
+</div>

@@ -1,0 +1,32 @@
+<ng-container *ngIf="user">
+    <div class="main-workspace-page" style="max-width: 1070px; width: 100%; height: 100%">
+
+        <div style="width: 100%">
+            <router-outlet></router-outlet>
+        </div>
+
+        <div
+            [pTooltip]="'show panel'"
+            tooltipPosition="right"
+            style="position: fixed; z-index: 1; top: 45vh; left: 0">
+            <div (click)="sidebarVisible = !sidebarVisible"
+                 class="open-chat-button flex align-items-center"
+                 style="max-width: 50px; width: 100%; height: 50px"
+                 [style.padding]="'0 10px'">
+                <i class="pi pi-angle-double-right"></i>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<p-sidebar #sidebar [(visible)]="sidebarVisible" styleClass="investor-sidebar">
+  <ng-template pTemplate="header">
+    <div>
+      <img style="max-width: 10vw; width: 100%;" src="assets/images/bus-logo.png" alt="invest-logo">
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <p-menu [model]="sidebarItems" styleClass="investor-sidebar-menu"></p-menu>
+  </ng-template>
+</p-sidebar>

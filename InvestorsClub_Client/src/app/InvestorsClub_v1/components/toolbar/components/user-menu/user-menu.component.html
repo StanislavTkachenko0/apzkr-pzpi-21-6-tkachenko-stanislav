@@ -1,0 +1,39 @@
+<div #userMenuButton class="toolbar-user-menu">
+  <div #clickEl style="cursor:pointer;margin-left:5px;margin-right:5px; margin-top: 2px; text-align: center; display: inline"
+       (click)="op.toggle($event)">
+    <button pButton type="button"
+            style="width: 55px;height:35px;"
+            class="toolbar-button p-button-text p-button-plain p-button-icon-only">
+      <div *ngIf="currentUser | async as currentUser; else emptyPhotoClose">
+        <p-avatar
+          [style]="{display: 'inline-block', verticalAlign: 'middle', height: '29px', width: '30px'}"
+          [image]="currentUser?.photoUrl"></p-avatar>
+      </div>
+      <span class="flex">
+                <i class="pi pi-angle-down"></i>
+      </span>
+    </button>
+  </div>
+  <p-overlayPanel #op [style]="{width: '220px'}"
+                  styleClass="investor-overlayPanel-user-menu">
+    <ng-template pTemplate>
+      <div #userMenuContent>
+        <div>
+          <p-menu #menu
+                  [showTransitionOptions]="'0ms'"
+                  [hideTransitionOptions]="'0ms'"
+                  [popup]="false"
+                  appendTo="body"
+                  styleClass="investor-user-menu"
+                  [model]="userMenuItems"
+          ></p-menu>
+        </div>
+      </div>
+    </ng-template>
+  </p-overlayPanel>
+</div>
+
+<ng-template #emptyPhotoClose>
+  <p-avatar icon="pi pi-user"></p-avatar>
+</ng-template>
+

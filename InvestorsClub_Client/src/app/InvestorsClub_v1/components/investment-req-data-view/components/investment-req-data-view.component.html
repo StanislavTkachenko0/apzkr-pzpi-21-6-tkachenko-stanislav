@@ -1,0 +1,54 @@
+<div *ngIf="investmentReqs.length > 0  else noDataTemplate" class="flex flex-direction-column" style="width: 100%; gap: 10px; padding: 30px 0">
+    <ng-container *ngFor="let invReq of investmentReqs; let idx = index">
+        <p-panel [collapsed]="true"
+                 [toggleable]="true"
+                 [collapseIcon]="'pi pi-plus'"
+                 [expandIcon]="'pi pi-minus'">
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center" style="gap: 10px">
+                    <p-avatar [image]="invReq.startupInfo?.founder?.photoUrl!" size="large" shape="circle" />
+                    <span style="font-weight: bold">{{ invReq.startupInfo?.name! }}</span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="icons">
+                <button *ngIf="invReqsMenuItems.length !== 0"
+                        class="p-panel-header-icon p-link"
+                        (click)="menu.toggle($event); originalEvent = $event">
+                    <span class="pi pi-bars"></span>
+                </button>
+                <p-menu #menu [model]="invReqsMenuItems"
+                        [popup]="true"
+                        (onShow)="onShowMenu(invReq)"
+                        appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <div class="flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div class="flex align-items-center gap-2">
+                        <span class="p-text-secondary">{{'INVESTOR_TYPE' | translate}}: <span style="font-weight: bold">{{ getInvestorTypeName(invReq.investorInfo?.investorType!) }}</span></span>
+                    </div>
+                    <span class="p-text-secondary">{{'INVESTOR' | translate}}: <span style="font-weight: bold">{{ invReq.investorInfo?.investorInfo?.email! }}</span></span>
+                </div>
+            </ng-template>
+            <div class="flex flex-direction-column" style="gap: 20px">
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'FORM_NAME' | translate}}:</div>
+                    <div class="content-view" [innerHTML]="invReq.startupInfo?.name!"></div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'INVESTMENT_AMOUNT' | translate}}:</div>
+                    <div>{{ invReq.investmentAmount! | customCurrency }}</div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'INVESTMENT_TERM' | translate}}:</div>
+                    <div>{{ invReq.investmentTerm! }} Month</div>
+                </div>
+            </div>
+        </p-panel>
+    </ng-container>
+</div>
+
+<ng-template #noDataTemplate>
+    <div class="flex justify-content-center" style="font-weight: bold; color: #636363;">
+        No Data
+    </div>
+</ng-template>

@@ -1,0 +1,184 @@
+<div *ngIf="startups.length > 0  else noDataTemplate" class="flex flex-direction-column" style="width: 100%; gap: 10px; padding: 30px 0">
+    <ng-container *ngFor="let startup of startups; let idx = index">
+        <p-panel [collapsed]="true"
+                 [toggleable]="true"
+                 (onBeforeToggle)="getInfoForStartup(startup)"
+                 [collapseIcon]="'pi pi-plus'"
+                 [expandIcon]="'pi pi-minus'">
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center" style="gap: 10px">
+                    <p-avatar [image]="startup.founder?.photoUrl!" size="large" shape="circle" />
+                    <span style="font-weight: bold">{{ startup.name }}</span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="icons">
+                <button *ngIf="startupMenuItems.length !== 0"
+                        class="p-panel-header-icon p-link"
+                        (click)="menu.toggle($event)">
+                    <span class="pi pi-bars"></span>
+                </button>
+                <p-menu #menu [model]="startupMenuItems"
+                        [popup]="true"
+                        (onShow)="onShowMenu(startup)"
+                        appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <div class="flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div
+                        [pTooltip]="'Business Rating'"
+                        tooltipPosition="top"
+                        class="flex align-items-center gap-2">
+                        <p-rating
+                            [(ngModel)]="startup.rating"
+                            [readonly]="true"
+                            [cancel]="false"
+                            [stars]="5"></p-rating>
+                    </div>
+                    <span class="p-text-secondary">{{'FOUNDER' | translate}}: <span style="font-weight: bold">{{ startup.founder?.email! }}</span></span>
+                </div>
+            </ng-template>
+            <div class="flex flex-direction-column" style="gap: 20px">
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'DESCRIPTION' | translate}}:</div>
+                    <div class="content-view" [innerHTML]="startup.description"></div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'REQUIRED_BUDGET' | translate}}:</div>
+                    <div>{{ startup?.requiredBudget! | customCurrency }}</div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'DEADLINE' | translate}}:</div>
+                    <div>{{ startup.deadline }} Month</div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'DESIRED_INVESTOR' | translate}}:</div>
+                    <div>{{ getDesiredInvestorTypeName(startup?.desiredInvestorType!) }}</div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'STARTUP_STAGE' | translate}}:</div>
+                    <div>{{ getDevelopmentStageName(startup?.developmentStage!) }}</div>
+                </div>
+                <div class="flex align-items-start" style="gap: 10px">
+                    <div style="font-weight: bold">{{'DOCUMENTATION' | translate}}:</div>
+                    <a [href]="startup?.documentPath!" target="_blank">{{'DOCUMENTATION' | translate}}</a>
+                </div>
+            </div>
+        </p-panel>
+    </ng-container>
+</div>
+
+<ng-template #noDataTemplate>
+    <div class="flex justify-content-center" style="font-weight: bold; color: #636363">
+        No Data
+    </div>
+</ng-template>
+
+<ng-template #getReview let-startup="startup">
+
+</ng-template>
+
+<p-dialog #dialogInv
+          [header]="'CREATE_INVESTMENT_REQ' | translate"
+          [(visible)]="visibleInvestmentReq"
+          [modal]="true"
+          [style]="{ width: '50vw' }"
+          [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <form class="flex flex-direction-column" style="gap: 15px" [formGroup]="createInvestmentForm">
+        <div class="flex-column gap-2">
+            <label for="investmentAmount">{{ 'INVESTMENT_AMOUNT' | translate }}</label>
+            <input
+                pInputText
+                formControlName="investmentAmount"
+                style="width: 100%"
+                id="investmentAmount"
+                type="number" />
+            <div style="height: 10px">
+                <ng-container *ngIf="(createInvestmentForm.get('investmentAmount')?.touched || createInvestmentForm.get('investmentAmount')?.dirty)
+                            && createInvestmentForm.get('investmentAmount')?.invalid">
+                    <small *ngIf="createInvestmentForm.get('investmentAmount')?.errors?.['required']" class="p-error">
+                        {{localizationService.getLanguage() === 'en' ? 'Required field' : 'Обовя`зкове поле'}}</small>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="flex-column gap-2">
+            <label for="investmentTerm">{{ 'INVESTMENT_TERM' | translate }}</label>
+            <input
+                pInputText
+                formControlName="investmentTerm"
+                style="width: 100%"
+                id="investmentTerm"
+                [placeholder]="localizationService.getLanguage() === 'en'
+                        ? 'Enter term in month' : 'Введіть срок у місяцях'"
+                type="number" />
+            <div style="height: 10px">
+                <ng-container *ngIf="(createInvestmentForm.get('investmentTerm')?.touched || createInvestmentForm.get('investmentTerm')?.dirty)
+                            && createInvestmentForm.get('investmentTerm')?.invalid">
+                    <small *ngIf="createInvestmentForm.get('investmentTerm')?.errors?.['required']" class="p-error">
+                        {{localizationService.getLanguage() === 'en' ? 'Required field' : 'Обовя`зкове поле'}}</small>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button
+            pButton
+            [label]="'CREATE' | translate"
+            icon="pi pi-check"
+            iconPos="left"
+            class="p-button p-button-plain p-button-text"
+            [disabled]="createInvestmentForm.invalid"
+            [loading]="isLoadingInvestReq"
+            (click)="onInvestmentRequest(currentStartup, dialogInv, $event)"
+        ></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog #dialog
+          [header]="'CREATE_REVIEW' | translate"
+          [(visible)]="visibleReview"
+          [modal]="true"
+          [style]="{ width: '50vw' }"
+          [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <form class="flex flex-direction-column" style="gap: 15px" [formGroup]="getReviewForm">
+        <div class="flex-column gap-2">
+            <label for="investmentAmount">{{ 'COMMENT' | translate }}</label>
+            <input
+                pInputText
+                formControlName="text"
+                style="width: 100%"
+                id="text"
+                type="text" />
+        </div>
+
+        <div class="flex flex-direction-column" style="gap: 5px">
+            <label for="rating">{{ 'RATING' | translate }}</label>
+           <div>
+               <p-rating id="rating"
+                         [cancel]="false"
+                         formControlName="rating"></p-rating>
+               <div style="height: 10px">
+                   <ng-container *ngIf="(getReviewForm.get('rating')?.touched || getReviewForm.get('rating')?.dirty)
+                            && getReviewForm.get('rating')?.invalid">
+                       <small *ngIf="getReviewForm.get('rating')?.errors?.['required']" class="p-error">
+                           {{localizationService.getLanguage() === 'en' ? 'Required field' : 'Обовя`зкове поле'}}</small>
+                   </ng-container>
+               </div>
+           </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button
+            pButton
+            [label]="'CREATE' | translate"
+            icon="pi pi-check"
+            iconPos="left"
+            class="p-button p-button-plain p-button-text"
+            [disabled]="getReviewForm.invalid"
+            [loading]="isLoadingReview"
+            (click)="onGetReview(currentStartup, dialog, $event)"
+        ></button>
+    </ng-template>
+</p-dialog>

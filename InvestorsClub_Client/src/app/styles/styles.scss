@@ -1,0 +1,122 @@
+// Imports
+@import './mixins.scss';
+@import './helpers.scss';
+@import './variables';
+@import 'controls/controls';
+@import "~quill/dist/quill.core.css";
+@import "~quill/dist/quill.snow.css";
+
+// Styles
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+    background-color: #121212;
+}
+
+.scrollpanel-investor {
+  &.p-scrollpanel {
+    overflow-x: hidden;
+
+    .p-scrollpanel-bar {
+      background: $scrollColor;
+    }
+  }
+}
+
+.toggle-investors {
+  max-height: 35px;
+
+  &.p-togglebutton.p-button.p-highlight {
+    background: $mainLightlyColor;
+    border: 1px solid $mainBorderColor;
+    color: $mainTextColor;
+
+    &:hover {
+      background: $mainLightlyColor;
+      border: 1px solid $mainBorderColor;
+      color: $mainTextColor;
+    }
+  }
+}
+
+.introduction-page {
+  .title-text {
+    color: $mainTextColor;
+    font-family: $mainFont;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px;
+    @include fluidFontSize(15px, 40px, 767px, 1280px, 40px);
+  }
+}
+
+.sign-card {
+  &.p-card .p-card-body {
+    padding-bottom: 0;
+  }
+}
+
+.content-view {
+  img {
+    width: 100%;
+  }
+}
+
+.open-chat-button {
+  cursor: pointer;
+  @include border-radius(6px);
+  border: 1px solid $wsBorderColor;
+  background: $wsDashboardCardBgColor;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+  &:hover {
+    background: #ffffff82;
+  }
+
+  .users-line {
+
+    .p-avatar-group {
+      flex-direction: column;
+
+      p-avatar+p-avatar {
+        margin-left: 0;
+        margin-top: -.5rem;
+      }
+
+      .remove-margin {
+
+      }
+    }
+  }
+}
+
+.investor-overlayPanel-user-menu {
+  &.p-overlaypanel .p-overlaypanel-content {
+    padding: 0;
+  }
+
+  .investor-user-menu {
+    width: 100%;
+  }
+}
+
+.investor-sidebar {
+  &.p-sidebar {
+      background: #121212;
+  }
+
+  &.p-sidebar .p-sidebar-content {
+    padding: 0;
+  }
+
+  .investor-sidebar-menu {
+    &.p-menu {
+      width: 100%;
+      background: #121212;
+      border: unset;
+    }
+  }
+}
